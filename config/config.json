@@ -1,0 +1,18 @@
+{
+  "paths": {
+    "input": "data/presales_data_sample.csv",
+    "output": "output"
+  },
+  "weights": {
+    "name_similarity": 0.6,
+    "country_match": 0.15,
+    "city_match": 0.1,
+    "freshness": 0.1,
+    "has_website": 0.05
+  },
+  "thresholds": {
+    "strong": 0.75,
+    "review": 0.6,
+    "name_hard_floor": 0.7
+  }
+}

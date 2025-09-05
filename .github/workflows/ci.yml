@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -V
+        python -m pip install --upgrade pip
+        pip install pandas
+
+    - name: Run smoke test
+      run: |
+        python tests/smoke_test.py
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: output_test
+        path: output_test/**/*.csv
+        if-no-files-found: ignore

@@ -1,0 +1,25 @@
+stages:
+  - test
+  - build
+
+test:python:
+  stage: test
+  image: python:3.11-slim
+  before_script:
+    - python -V
+    - pip install --no-cache-dir pandas
+  script:
+    - python tests/smoke_test.py
+  artifacts:
+    when: always
+    paths:
+      - output_test/*.csv
+
+build:package:
+  stage: build
+  image: alpine:3.20
+  script:
+    - zip -r veridion_poc_artifacts.zip output/ || true
+  artifacts:
+    paths:
+      - veridion_poc_artifacts.zip
