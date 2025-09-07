@@ -5,7 +5,7 @@
 This repository contains a small prototype (POC) for supplier entity resolution and data quality checks.
 
 - **Backend**: Python (pandas, stdlib only).
-- **Frontend**: Power BI (using the CSV outputs and provided DAX measures).
+- **Frontend**: Power BI (using the CSV outputs and provided DAX measures). - https://download.microsoft.com/download/8/8/0/880bca75-79dd-466a-927d-1abf1f5454b0/PBIDesktopSetup_x64.exe
 
 ## Run locally
 ```bash
