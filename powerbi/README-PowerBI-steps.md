@@ -1,38 +1,35 @@
 # Power BI — Procurement POC Frontend
+# Power BI Report — Entity Resolution POC
 
-This guide builds a compact report over the `output/*.csv` files from the Python backend.
+## Objectives
+This Power BI project is built on top of the **entity resolution pipeline**.  
+The goal is to give business users (marketing, sales, leadership) a clear view of:
+- **How clean the supplier database is** (Matched, Needs Review, Unmatched, Clean vs. Has Flags).  
+- **Why records match or fail to match** (scores, similarities, feature presence).  
+- **Where the main data quality issues are** (QC flags such as missing address, no website, stale data).  
+- **What to check next** (a prioritized review queue for manual validation).  
 
-## Data
-- Load `matches_decisions.csv` and `qc_summary.csv`.
-- Rename tables to **Matches** and **QC_Summary**.
+## Flow
+1. **Input**: supplier records are processed by the Python pipeline.  
+   - Output CSV: `output/matches_decisions.csv`  
+   - Contains decisions, match scores, quality flags, and attributes.  
 
-## Measures (DAX)
-Create in **Matches**:
-```
-Matched Rows := COUNTROWS(FILTER(Matches, Matches[decision] = "Matched"))
-Needs Review Rows := COUNTROWS(FILTER(Matches, Matches[decision] = "Needs Review"))
-Unmatched Rows := COUNTROWS(FILTER(Matches, Matches[decision] = "Unmatched"))
-Clean Rows := COUNTROWS(FILTER(Matches, Matches[qc_flags] = ""))
-```
+2. **Data Model**: Power BI imports `matches_decisions.csv`.  
+   - Measures are created for counts, percentages, scores, feature presence, and QC flags.  
+   - Measures are organized into folders (*Counts, Percentages, Quality, Scores, Features, QC Flags*).  
 
-## Visuals
-1. **KPI Cards**: `Matched Rows`, `Needs Review Rows`, `Unmatched Rows`.
-2. **Bar chart**: Count of rows by `decision` (from Matches).
-3. **Bar chart**: `rows` by `decision` from **QC_Summary** (optional compare).
-4. **Table (Review Queue)**: `input_company_name`, `company_name`, `match_score`, `decision`, `decision_notes`, `qc_flags`.
-5. **Slicers**: `decision`, and a derived column for QC cleanliness:
+3. **Report Pages**:  
+   - **Executive Summary**: overall health of the database.  
+   - **Match Quality & Features**: what drives good or bad matches.  
+   - **Data Quality Flags**: where the data problems are.  
+   - **Review Queue**: what should be checked first.  
 
-Add a calculated column in Matches:
-```
-QC_Status = IF(Matches[qc_flags] = "", "clean", "has_flags")
-```
+4. **End Users**:  
+   - **Marketing** → build clean campaign lists and know enrichment needs.  
+   - **Sales** → focus on high-confidence prospects and understand gaps.  
+   - **Leadership** → see KPIs and data quality at a glance.  
 
-## Drill-through (optional)
-- Create a drill-through page on `input_row_key` to show the chosen match details.
-- Include external links as columns: `website_url`, `linkedin_url` for quick validation.
-
-## Narrative Page (client-facing)
-- Summarize the method and thresholds:
-  - Matching score weights (Name 60%, Country 15%, City 10%, Freshness 10%, Website 5%)
-  - Thresholds: Matched ≥ 0.75, Needs Review in [0.60, 0.75), Unmatched otherwise; name_sim floor 0.70
-- Include a short blurb on QC policy and next steps for unresolved items.
+## How to Use
+- Refresh the model to load the latest `matches_decisions.csv` from the pipeline.  
+- Navigate through the 4 pages to understand data health and priorities.  
+- Use filters (country, city, decision) to focus on the areas that matter most.  

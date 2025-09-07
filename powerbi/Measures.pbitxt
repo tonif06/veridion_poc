@@ -1,0 +1,113 @@
+# Measures for Entity Resolution POC
+
+[Matched Rows]
+Name = Matched Rows
+Table = Matches
+DisplayFolder = Counts
+Expression = 
+    CALCULATE(COUNTROWS(Matches), Matches[decision] = "Matched")
+
+[Needs Review Rows]
+Name = Needs Review Rows
+Table = Matches
+DisplayFolder = Counts
+Expression = 
+    CALCULATE(COUNTROWS(Matches), Matches[decision] = "Needs Review")
+
+[Unmatched Rows]
+Name = Unmatched Rows
+Table = Matches
+DisplayFolder = Counts
+Expression = 
+    CALCULATE(COUNTROWS(Matches), Matches[decision] = "Unmatched")
+
+[Total Rows]
+Name = Total Rows
+Table = Matches
+DisplayFolder = Counts
+Expression = 
+    COUNTROWS(Matches)
+
+[Clean Rows]
+Name = Clean Rows
+Table = Matches
+DisplayFolder = Quality
+Expression = 
+    CALCULATE(COUNTROWS(Matches), ISBLANK(Matches[qc_flags]) || TRIM(Matches[qc_flags]) = "")
+
+[Has Flags Rows]
+Name = Has Flags Rows
+Table = Matches
+DisplayFolder = Quality
+Expression = 
+    CALCULATE(COUNTROWS(Matches), NOT(ISBLANK(Matches[qc_flags]) || TRIM(Matches[qc_flags]) = ""))
+
+[Matched %]
+Name = Matched %
+Table = Matches
+DisplayFolder = Percentages
+Expression = 
+    DIVIDE([Matched Rows], [Total Rows])
+
+[Needs Review %]
+Name = Needs Review %
+Table = Matches
+DisplayFolder = Percentages
+Expression = 
+    DIVIDE([Needs Review Rows], [Total Rows])
+
+[Unmatched %]
+Name = Unmatched %
+Table = Matches
+DisplayFolder = Percentages
+Expression = 
+    DIVIDE([Unmatched Rows], [Total Rows])
+
+[Clean %]
+Name = Clean %
+Table = Matches
+DisplayFolder = Percentages
+Expression = 
+    DIVIDE([Clean Rows], [Total Rows])
+
+[Has Flags %]
+Name = Has Flags %
+Table = Matches
+DisplayFolder = Percentages
+Expression = 
+    DIVIDE([Has Flags Rows], [Total Rows])
+
+[Average Match Score]
+Name = Average Match Score
+Table = Matches
+DisplayFolder = Scores
+Expression = 
+    AVERAGEX(Matches, Matches[match_score])
+
+[Max Match Score]
+Name = Max Match Score
+Table = Matches
+DisplayFolder = Scores
+Expression = 
+    MAX(Matches[match_score])
+
+[Min Match Score]
+Name = Min Match Score
+Table = Matches
+DisplayFolder = Scores
+Expression = 
+    MIN(Matches[match_score])
+
+[Average Days Since Update]
+Name = Average Days Since Update
+Table = Matches
+DisplayFolder = Freshness
+Expression = 
+    AVERAGEX(Matches, Matches[days_since_update])
+
+[Freshness Score (Avg)]
+Name = Freshness Score (Avg)
+Table = Matches
+DisplayFolder = Freshness
+Expression = 
+    AVERAGEX(Matches, Matches[freshness])
